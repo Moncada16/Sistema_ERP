@@ -1,0 +1,206 @@
+### 🟢 Health check
+GET http://localhost:3002/
+
+### 🔐 Auth - Registro de usuario
+POST http://localhost:3002/api/users/register
+Content-Type: application/json
+
+{
+  "nombre": "Test User",
+  "email": "test@example.com",
+  "telefono": "3001234567",
+  "password": "testpass",
+  "confirmPassword": "testpass"
+}
+
+### 🔐 Auth - Login
+POST http://localhost:3002/api/users/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "testpass"
+}
+
+### 🔁 Refresh Token
+GET http://localhost:3002/api/users/refresh
+Authorization: Bearer {{token}}
+
+### 👤 Get profile
+GET http://localhost:3002/api/users/me
+Authorization: Bearer {{token}}
+
+### 👤 Update profile
+PUT http://localhost:3002/api/users/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Nuevo Nombre",
+  "telefono": "3107654321",
+  "email": "nuevo@email.com"
+}
+
+### 🏢 Crear empresa
+POST http://localhost:3002/api/empresas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Empresa XYZ",
+  "nit": "123456789",
+  "direccion": "Cra 1 #2-3",
+  "ciudad": "Bogotá",
+  "telefono": "1234567890",
+  "email": "empresa@xyz.com",
+  "moneda": "COP",
+  "zonaHoraria": "America/Bogota"
+}
+
+### 🏢 Obtener todas las empresas
+GET http://localhost:3002/api/empresas
+Authorization: Bearer {{token}}
+
+### 🏢 Empresas con usuarios
+GET http://localhost:3002/api/empresas/con-usuarios
+Authorization: Bearer {{token}}
+
+### 🏢 Actualizar empresa
+PUT http://localhost:3002/api/empresas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "direccion": "Nueva dirección 456",
+  "ciudad": "Medellín"
+}
+
+### 🏢 Obtener bodegas de la empresa
+GET http://localhost:3002/api/empresas/bodegas
+Authorization: Bearer {{token}}
+
+### 🧱 Crear bodega
+POST http://localhost:3002/api/bodegas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "codigo": "BOD001",
+  "nombre": "Bodega Central",
+  "direccion": "Zona Industrial"
+}
+
+### 🧱 Listar bodegas
+GET http://localhost:3002/api/bodegas
+Authorization: Bearer {{token}}
+
+### 🧱 Obtener bodega por ID
+GET http://localhost:3002/api/bodegas/1
+Authorization: Bearer {{token}}
+
+### 🧱 Actualizar bodega
+PUT http://localhost:3002/api/bodegas/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Bodega Norte",
+  "direccion": "Nueva dirección"
+}
+
+### 🧱 Eliminar bodega
+DELETE http://localhost:3002/api/bodegas/1
+Authorization: Bearer {{token}}
+
+### 📦 Crear artículo
+POST http://localhost:3002/api/articulos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Camisa de vestir",
+  "descripcion": "Camisa slim fit 100% algodón",
+  "precio": 65000
+}
+
+### 📄 Listar artículos
+GET http://localhost:3002/api/articulos
+Authorization: Bearer {{token}}
+
+### 🔍 Obtener artículo por ID
+GET http://localhost:3002/api/articulos/1
+Authorization: Bearer {{token}}
+
+### ✏️ Actualizar artículo
+PUT http://localhost:3002/api/articulos/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Camisa Slim Actualizada",
+  "descripcion": "Camisa de alta calidad"
+}
+
+### ❌ Eliminar artículo
+DELETE http://localhost:3002/api/articulos/1
+Authorization: Bearer {{token}}
+
+### 🎯 Crear variante para artículo
+POST http://localhost:3002/api/articulos/1/variantes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Camisa Azul Talla M"
+}
+
+### 📋 Listar variantes de un artículo
+GET http://localhost:3002/api/articulos/1/variantes
+Authorization: Bearer {{token}}
+
+### 🛠️ Actualizar variante
+PUT http://localhost:3002/api/articulos/variantes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Camisa Azul Talla M Plus"
+}
+
+### 🗑️ Eliminar variante
+DELETE http://localhost:3002/api/articulos/variantes/1
+Authorization: Bearer {{token}}
+
+### 🏬 Asignar inventario a variante en bodega
+POST http://localhost:3002/api/articulos/variantes/1/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bodegaId": 1,
+  "cantidad": 100
+}
+
+### 📦 Ver inventario por variante
+GET http://localhost:3002/api/articulos/variantes/1/inventario
+Authorization: Bearer {{token}}
+
+### 🧾 Ver inventario total por artículo
+GET http://localhost:3002/api/articulos/1/detalle-inventario
+Authorization: Bearer {{token}}
+
+### 📸 Subir imagen real a Cloudinary
+POST http://localhost:3002/api/articulos/1/fotos
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data
+
+imagen: (seleccionar archivo)
+orden: 1
+
+### 📷 Listar fotos de un artículo
+GET http://localhost:3002/api/articulos/1/fotos
+Authorization: Bearer {{token}}
+
+### ❌ Eliminar una foto
+DELETE http://localhost:3002/api/articulos/fotos/1
+Authorization: Bearer {{token}}
