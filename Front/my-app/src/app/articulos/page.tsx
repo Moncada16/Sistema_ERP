@@ -11,7 +11,7 @@ export default function ArticulosPage() {
   const [editando, setEditando] = useState<Articulo | null>(null)
   const [eliminando, setEliminando] = useState<Articulo | null>(null)
   const [mostrarCrear, setMostrarCrear] = useState(false)
-
+ 
   const cargarArticulos = async () => {
     const res = await api.get('/articulos')
     setArticulos(res.data)

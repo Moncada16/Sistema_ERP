@@ -77,7 +77,7 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
             {reseñas.map((resena, i) => (
               <div key={i} className="w-72 bg-gray-800 rounded-lg shadow-lg p-6 text-center transition-transform transform hover:scale-105">
-                <Image src={resena.foto} alt={resena.nombre} className="mx-auto block h-24 rounded-full sm:mx-0 sm:shrink-0" />
+                <Image src={resena.foto} alt={resena.nombre} className="w-2 mx-auto block h-24 rounded-full sm:mx-0 sm:shrink-0" />
                 <h3 className="font-semibold text-lg">{resena.nombre}</h3>
                 <p className="text-sm text-gray-400 mt-2">“{resena.texto}”</p>
               </div>

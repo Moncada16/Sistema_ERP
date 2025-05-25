@@ -9,7 +9,7 @@ interface Props {
   articulo?: Articulo
   onClose: () => void
   onSuccess: () => void
-}
+} 
 
 export default function ArticleModal({ modo, articulo, onClose, onSuccess }: Props) {
   return (

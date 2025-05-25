@@ -33,7 +33,7 @@ export default function LoginForm() {
     try {
       const res = await api.post('/auth/login', formData)
       console.log('Respuesta completa del servidor:', res.data)
-
+ 
       const accessToken = res.data.token
       const rawUser = res.data.user
       console.log('✅ res.data:', res.data)
