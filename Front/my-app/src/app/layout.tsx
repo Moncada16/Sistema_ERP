@@ -19,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className="min-h-screen">
-      <body>
+    <html lang="es" className="min-h-screen bg-gray-900 text-gray-200">
+      <body >
         <AuthProvider>
           <SidebarProvider>
             <Navbar />
