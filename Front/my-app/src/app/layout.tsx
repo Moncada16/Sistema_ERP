@@ -4,6 +4,8 @@ import { AuthProvider } from './context/AuthContext'
 import { SidebarProvider } from '../context/SidebarContext' // ← NUEVO
 import Navbar from '../components/Navbar'
 import Footer from '@/components/Footer'
+import { HydrationFix } from '@/components/HydrationFix'
+
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -22,6 +24,7 @@ export default function RootLayout({
     <html lang="es" className="min-h-screen bg-gray-900 text-gray-200">
       <body >
         <AuthProvider>
+        <HydrationFix />
           <SidebarProvider>
             <Navbar />
             {children}
