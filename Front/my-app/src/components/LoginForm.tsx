@@ -36,9 +36,6 @@ export default function LoginForm() {
  
       const accessToken = res.data.token
       const rawUser = res.data.user
-      console.log('✅ res.data:', res.data)
-console.log('🔑 res.data.token:', res.data.token)
-console.log('👤 res.data.usuario:', res.data.usuario)
 
       if (!accessToken || !rawUser) {
         throw new Error('Respuesta inválida del servidor')
