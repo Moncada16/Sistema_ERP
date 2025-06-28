@@ -108,7 +108,7 @@ model Variante {
   nombre         String
   sku            String          @unique
   articuloId     Int
-  articulo       Articulo        @relation(fields: [articuloId], references: [id])
+  articulo       Articulo        @relation("ArticuloToVariante", fields: [articuloId], references: [id])
   inventario     Inventario[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt

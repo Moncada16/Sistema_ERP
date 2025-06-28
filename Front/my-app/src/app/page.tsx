@@ -2,8 +2,6 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import { useAuth } from './context/AuthContext'
 import Image from 'next/image'
 

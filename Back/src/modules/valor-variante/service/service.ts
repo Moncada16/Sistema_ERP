@@ -1,8 +1,8 @@
 import prisma from '../../../../prisma/client'
 
-export const crear = async (tipoVarianteId: number, nombre: string) => {
+export const crear = async (tipoVarianteId: number, nombre: string, articuloId: number, valor: string) => {
   return await prisma.valorVariante.create({
-    data: { nombre, tipoVarianteId }
+    data: { nombre, tipoVarianteId, articuloId, valor }
   })
 }
 

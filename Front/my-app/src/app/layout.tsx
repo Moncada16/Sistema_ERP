@@ -1,13 +1,6 @@
+import { Metadata } from 'next'
 import './globals.css'
-import type { Metadata } from 'next'
-import { AuthProvider } from './context/AuthContext'
-import { SidebarProvider } from '../context/SidebarContext' // ← NUEVO
-import Navbar from '../components/Navbar'
-import Footer from '@/components/Footer'
-import { HydrationFix } from '@/components/HydrationFix'
-
-
-// const inter = Inter({ subsets: ['latin'] })
+import RootClientLayout from '@/components/RootClientLayout'
 
 export const metadata: Metadata = {
   title: 'Sistema ERP',
@@ -21,16 +14,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className="min-h-screen bg-gray-900 text-gray-200">
-      <body >
-        <AuthProvider>
-        <HydrationFix />
-          <SidebarProvider>
-            <Navbar />
-            {children}
-            <Footer />
-          </SidebarProvider>
-        </AuthProvider>
+    <html lang="es" className="min-h-screen">
+      <body className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200 transition-colors duration-200">
+        <RootClientLayout>
+          {children}
+        </RootClientLayout>
       </body>
     </html>
   )
