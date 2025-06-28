@@ -19,7 +19,7 @@ import {
 } from 'react-icons/fi'
 import Tooltip from '@/components/Tooltip'
 
-import { useSidebar } from '../context/SidebarContext'
+import { useSidebar } from '../app/context/SidebarContext'
 
 interface NavItem {
   name: string

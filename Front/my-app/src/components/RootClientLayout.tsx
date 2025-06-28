@@ -1,13 +1,14 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { ThemeProvider } from '@/context/ThemeContext'
-import { AuthProvider } from '@/context/AuthContext'
-import { SidebarProvider } from '@/context/SidebarContext'
+import { ThemeProvider } from '@/app/context/ThemeContext'
+
+import { SidebarProvider } from '@/app/context/SidebarContext'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { HydrationFix } from '@/components/HydrationFix'
 import ThemeToggle from '@/components/ThemeToggle'
+import { AuthProvider } from '@/app/context/AuthContext'
 
 export default function RootClientLayout({ children }: { children: ReactNode }) {
   return (

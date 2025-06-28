@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/context/AuthContext'
 import Sidebar from '@/components/sidebar'
 import ProfileMenu from '@/components/ProfileMenu'
-import { useSidebar } from '@/context/SidebarContext'
+import { useSidebar } from '@/app/context/SidebarContext'
 
 export default function InicioLayout({ children }: { children: ReactNode }) {
   const { isLoading, isAuthenticated } = useAuth()

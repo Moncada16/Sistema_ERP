@@ -1,8 +1,8 @@
 'use client'
 
-import { useAuth } from '@/context/AuthContext'
 import Link from 'next/link'
-import { useSidebar } from '@/context/SidebarContext'
+import { useSidebar } from '@/app/context/SidebarContext'
+import { useAuth } from '@/app/context/AuthContext'
 
 export default function Navbar() {
   const { user } = useAuth()
