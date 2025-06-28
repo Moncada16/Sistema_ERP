@@ -3,9 +3,9 @@ import * as service from '../service/service'
 
 export const crear = async (req: Request, res: Response) => {
   const tipoVarianteId = parseInt(req.params.tipoId)
-  const { nombre } = req.body
-  const valor = await service.crear(tipoVarianteId, nombre)
-  res.status(201).json(valor)
+  const { nombre, articuloId, valor } = req.body
+  const valorVariante = await service.crear(tipoVarianteId, nombre, articuloId, valor)
+  res.status(201).json(valorVariante)
 }
 
 export const listarPorTipo = async (req: Request, res: Response) => {
