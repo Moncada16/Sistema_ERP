@@ -1,5 +1,5 @@
 // src/app.ts
-
+import path from 'path';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -112,6 +112,13 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // 🌐 Rutas agrupadas bajo /api
 app.use(config.server.apiPrefix, apiRouter);
+// 📂 Servir los archivos del folder public
+app.use(express.static(path.join(__dirname, '../public')));
+
+// 🏠 Cuando alguien visita "/", mostrar el HTML
+app.get('/', (_req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 // ❌ 404 — Ruta no encontrada
 app.use((req: Request, res: Response) => {

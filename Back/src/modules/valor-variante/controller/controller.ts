@@ -4,7 +4,7 @@ import * as service from '../service/service'
 export const crear = async (req: Request, res: Response) => {
   const tipoVarianteId = parseInt(req.params.tipoId)
   const { nombre, articuloId, valor } = req.body
-  const valorVariante = await service.crear(tipoVarianteId, nombre, articuloId, valor)
+  const valorVariante = await service.crear(tipoVarianteId, nombre)
   res.status(201).json(valorVariante)
 }
 

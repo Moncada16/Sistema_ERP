@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  img           String?
-  imgPublicId   String?
-  nombre        String
-  email         String    @unique
-  telefono      String    @unique
-  password      String
-  rol           String    @default("gerente")
-  empresaId     Int?
-  empresa       Empresa?  @relation("EmpresaUsuarios", fields: [empresaId], references: [id])
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int      @id @default(autoincrement())
+  img         String?
+  nombre      String
+  email       String   @unique
+  telefono    String   @unique
+  password    String
+  rol         String   @default("gerente")
+  empresaId   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  imgPublicId String?
+  empresa     Empresa? @relation("EmpresaUsuarios", fields: [empresaId], references: [id])
 }
 
 model Empresa {
@@ -32,12 +32,12 @@ model Empresa {
   email       String      @unique
   moneda      String
   zonaHoraria String
-  usuarios    User[]      @relation("EmpresaUsuarios")
-  bodegas     Bodega[]
-  articulos   Articulo[]
-  proveedores Proveedor[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  articulos   Articulo[]
+  bodegas     Bodega[]
+  proveedores Proveedor[]
+  usuarios    User[]      @relation("EmpresaUsuarios")
 }
 
 model Bodega {
@@ -45,12 +45,13 @@ model Bodega {
   nombre     String
   direccion  String
   empresaId  Int
-  empresa    Empresa      @relation(fields: [empresaId], references: [id])
-  inventario Inventario[]
-  compras    Compra[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+  empresa    Empresa      @relation(fields: [empresaId], references: [id])
+  compras    Compra[]
+  inventario Inventario[]
 }
+
 model Articulo {
   id              Int                @id @default(autoincrement())
   nombre          String
@@ -58,61 +59,47 @@ model Articulo {
   descripcion     String?
   precio          Float
   empresaId       Int
-  empresa         Empresa            @relation(fields: [empresaId], references: [id])
   fotoPrincipal   String?
-  fotos           Foto[]
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
-
-  // Relación hacia variantes (por SKU y nombre)
-  variantes       Variante[]         @relation("ArticuloToVariante")
-
-  // Relación hacia valores de variantes (por color, talla, etc.)
-  valoresVariante ValorVariante[]    @relation("ArticuloToValorVariante")
-
-  // Relación hacia precios por tipo (mayorista, minorista, etc.)
-  precios         PrecioArticulo[]   @relation("ArticuloToPrecioArticulo")
-
+  empresa         Empresa            @relation(fields: [empresaId], references: [id])
   articuloValores ArticuloVariante[]
+  fotos           Foto[]
+  precios         PrecioArticulo[]   @relation("ArticuloToPrecioArticulo")
+  variantes       Variante[]         @relation("ArticuloToVariante")
 }
 
-
 model TipoPrecio {
-  id      Int               @id @default(autoincrement())
-  nombre  String            @unique
-  creado  DateTime          @default(now())
+  id      Int              @id @default(autoincrement())
+  nombre  String           @unique
+  creado  DateTime         @default(now())
   precios PrecioArticulo[]
 }
 
 model PrecioArticulo {
-  id             Int          @id @default(autoincrement())
-  articuloId     Int
-  tipoPrecioId   Int
-  valor          Float
-  creadoEn       DateTime     @default(now())
-  actualizado    DateTime     @updatedAt
-
-  // Relación con Articulo
-  articulo       Articulo     @relation("ArticuloToPrecioArticulo", fields: [articuloId], references: [id], onDelete: Cascade)
-
-  // Relación con tipoPrecio
-  tipoPrecio     TipoPrecio   @relation(fields: [tipoPrecioId], references: [id])
+  id           Int        @id @default(autoincrement())
+  articuloId   Int
+  valor        Float
+  creadoEn     DateTime   @default(now())
+  actualizado  DateTime   @updatedAt
+  tipoPrecioId Int
+  articulo     Articulo   @relation("ArticuloToPrecioArticulo", fields: [articuloId], references: [id], onDelete: Cascade)
+  tipoPrecio   TipoPrecio @relation(fields: [tipoPrecioId], references: [id])
 
   @@unique([articuloId, tipoPrecioId])
   @@index([articuloId])
 }
-
 
 model Variante {
   id             Int             @id @default(autoincrement())
   nombre         String
   sku            String          @unique
   articuloId     Int
-  articulo       Articulo        @relation("ArticuloToVariante", fields: [articuloId], references: [id])
-  inventario     Inventario[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   detallesCompra CompraDetalle[]
+  inventario     Inventario[]
+  articulo       Articulo        @relation("ArticuloToVariante", fields: [articuloId], references: [id])
 }
 
 model Foto {
@@ -121,9 +108,9 @@ model Foto {
   publicId   String   @unique
   orden      Int?
   articuloId Int
-  articulo   Articulo @relation(fields: [articuloId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  articulo   Articulo @relation(fields: [articuloId], references: [id])
 }
 
 model Inventario {
@@ -131,8 +118,8 @@ model Inventario {
   varianteId Int
   bodegaId   Int
   cantidad   Int      @default(0)
-  variante   Variante @relation(fields: [varianteId], references: [id])
   bodega     Bodega   @relation(fields: [bodegaId], references: [id])
+  variante   Variante @relation(fields: [varianteId], references: [id])
 
   @@unique([varianteId, bodegaId])
 }
@@ -144,24 +131,19 @@ model TipoVariante {
 }
 
 model ValorVariante {
-  id              Int                @id @default(autoincrement()) 
-  articuloId      Int
-  valor           String
+  id              Int                @id @default(autoincrement())
   nombre          String
   tipoVarianteId  Int
-
-  articulo        Articulo         @relation("ArticuloToValorVariante", fields: [articuloId], references: [id])
-  tipoVariante    TipoVariante     @relation(fields: [tipoVarianteId], references: [id])
   articuloValores ArticuloVariante[]
+  tipoVariante    TipoVariante       @relation(fields: [tipoVarianteId], references: [id])
 }
 
 model ArticuloVariante {
-  id         Int @id @default(autoincrement())
+  id         Int           @id @default(autoincrement())
   articuloId Int
   valorId    Int
-
-  articulo Articulo      @relation(fields: [articuloId], references: [id])
-  valor    ValorVariante @relation(fields: [valorId], references: [id])
+  articulo   Articulo      @relation(fields: [articuloId], references: [id])
+  valor      ValorVariante @relation(fields: [valorId], references: [id])
 
   @@unique([articuloId, valorId])
 }
@@ -169,65 +151,62 @@ model ArticuloVariante {
 model Compra {
   id             Int              @id @default(autoincrement())
   proveedorId    Int
-  proveedor      Proveedor        @relation(fields: [proveedorId], references: [id])
   tipoPago       TipoPago
   fecha          DateTime         @default(now())
   bodegaId       Int
-  bodega         Bodega           @relation(fields: [bodegaId], references: [id])
-  detalles       CompraDetalle[]
   createdAt      DateTime         @default(now())
+  bodega         Bodega           @relation(fields: [bodegaId], references: [id])
+  proveedor      Proveedor        @relation(fields: [proveedorId], references: [id])
+  detalles       CompraDetalle[]
   CuentaPorPagar CuentaPorPagar[]
 }
 
 model CompraDetalle {
-  id          Int   @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   compraId    Int
   varianteId  Int
   cantidad    Int
   valorCompra Float
   valorVenta  Float
-
-  compra   Compra   @relation(fields: [compraId], references: [id])
-  variante Variante @relation(fields: [varianteId], references: [id])
+  compra      Compra   @relation(fields: [compraId], references: [id])
+  variante    Variante @relation(fields: [varianteId], references: [id])
 }
 
 model Proveedor {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   nombre    String
-  nit       String  @unique
+  nit       String   @unique
   direccion String?
   telefono  String?
   email     String?
-
   empresaId Int
-  empresa   Empresa @relation(fields: [empresaId], references: [id])
-
-  compras Compra[]
-}
-
-enum TipoPago {
-  contado
-  credito
+  compras   Compra[]
+  empresa   Empresa  @relation(fields: [empresaId], references: [id])
 }
 
 model CuentaPorPagar {
   id             Int                  @id @default(autoincrement())
   compraId       Int
-  compra         Compra               @relation(fields: [compraId], references: [id])
   saldoTotal     Float
   saldoPendiente Float
   estado         EstadoCuentaPorPagar @default(PENDIENTE)
-  abonos         AbonoCuenta[]
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
+  abonos         AbonoCuenta[]
+  compra         Compra               @relation(fields: [compraId], references: [id])
 }
 
 model AbonoCuenta {
   id               Int            @id @default(autoincrement())
   cuentaPorPagarId Int
-  cuentaPorPagar   CuentaPorPagar @relation(fields: [cuentaPorPagarId], references: [id])
   monto            Float
   fecha            DateTime       @default(now())
+  cuentaPorPagar   CuentaPorPagar @relation(fields: [cuentaPorPagarId], references: [id])
+}
+
+enum TipoPago {
+  contado
+  credito
 }
 
 enum EstadoCuentaPorPagar {

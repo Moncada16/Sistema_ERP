@@ -1,0 +1,15 @@
+2025-06-28 13:44:25 [31merror[39m: Error en la aplicación {"password":["La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y caracteres especiales"]}
+{
+  "name": "ValidationError",
+  "stack": "ValidationError: {\"password\":[\"La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y caracteres especiales\"]}\n    at C:\\Users\\PC\\Sistema_ERP\\Sistema_ERP\\Back\\src\\middleware\\validator.ts:67:15\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)",
+  "requestId": "req-1751136265096-kas8itsay",
+  "method": "POST",
+  "url": "/api/auth/register",
+  "body": {
+    "nombre": "angie",
+    "email": "angie@gmail.com",
+    "telefono": "3333333333",
+    "password": "posso10.",
+    "confirmPassword": "posso10."
+  }
+}

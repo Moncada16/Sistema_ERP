@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import api from '@/app/lib/api'
-import type { Articulo } from '@/app/articulos/articledto'
+import type { Articulo } from '@/app/inicio/articulos/articledto'
 
 export default function EditarArticulo({ articulo, onClose, onUpdated }: { articulo: Articulo, onClose: () => void, onUpdated: () => void }) {
   const [nombre, setNombre] = useState(articulo.nombre)

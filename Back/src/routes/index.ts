@@ -6,7 +6,7 @@ import userRoutes from '../modules/user/routes/user.routes'
 import fotoUserRoutes from '../modules/fotoUser/routes/fotoUser.routes'
 import empresaRoutes from '../modules/empresa/routes/empresa.routes'
 import bodegaRoutes from '../modules/bodega/routes/bodega.routes'
-// import articuloRoutes from '../modules/articulo/routes/articulo.routes'
+import articuloRoutes from '../modules/articulo/routes/articulo.routes'
 import fotoRoutes from '../modules/foto/routes/foto.routes'
 import inventarioRoutes from '../modules/inventario/routes/inventario.routes'
 import tipoVarianteRoutes from '../modules/tipo-variante/routes/routes'
@@ -25,7 +25,7 @@ router.use('/users', userRoutes)
 router.use('/usuarios/fotos', fotoUserRoutes)
 router.use('/mi-empresa', empresaRoutes)
 router.use('/bodegas', bodegaRoutes)
-// router.use('/articulos', articuloRoutes)
+router.use('/articulos', articuloRoutes)
 router.use('/articulos/fotos', fotoRoutes)
 router.use('/inventario', inventarioRoutes)
 router.use('/tipos-variante', tipoVarianteRoutes)
