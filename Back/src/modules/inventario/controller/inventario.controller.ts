@@ -3,8 +3,8 @@
 
  export const asignarInventario = async (req: Request, res: Response) => {
    const varianteId = parseInt(req.params.id)
-   const { bodegaId, cantidad } = req.body
-   const inv = await service.asignarInventario(varianteId, bodegaId, cantidad)
+   const { bodegaId, cantidad, ubicacion } = req.body
+   const inv = await service.asignarInventario(varianteId, bodegaId, cantidad, ubicacion)
    res.status(201).json(inv)
  }
 

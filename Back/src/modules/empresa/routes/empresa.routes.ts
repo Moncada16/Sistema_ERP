@@ -1,6 +1,6 @@
 // src/modules/empresa/routes/empresa.routes.ts
 import { Router } from 'express'
-import EmpresaController from '../controller/empresa.controller'
+import EmpresaController from '../controller/EmpresaController'
 import { verificarToken } from '../../../middleware/verificarToken'
 
 const router = Router()

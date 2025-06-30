@@ -1,3 +1,5 @@
+// src/app/inicio/articulos/articledto.ts
+
 export interface Articulo {
   id: number
   nombre: string
@@ -5,75 +7,89 @@ export interface Articulo {
   descripcion?: string
   precio: number
   empresaId: number
+  categoriaId?: number | null    // ← NUEVO: ID de categoría
+  marcaId?: number | null        // ← NUEVO: ID de marca
   fotoPrincipal?: string
   createdAt: string
   updatedAt: string
-     
-  // ✅ CORREGIDO: Relaciones según tu esquema de Prisma
-  fotos?: Foto[]
-  articuloValores?: ArticuloValor[]  // Tabla intermedia (no valoresVariante)
-  precios?: PrecioArticulo[]
+  
+  // Relaciones
   empresa?: {
     id: number
     nombre: string
   }
-}
-
-export interface Foto {
-  id: number
-  url: string
-  articuloId: number
-  publicId?: string  // Para Cloudinary
-  orden?: number     // Orden de las fotos
-}
-
-// ✅ NUEVO: Interface para la tabla intermedia ArticuloVariante
-export interface ArticuloValor {
-  id: number
-  articuloId: number
-  valorId: number        // ✅ CORREGIDO: valorId (no valorVarianteId)
-  valor?: ValorVariante  // Relación con ValorVariante
-}
-
-// ✅ CORREGIDO: ValorVariante según tu esquema
-export interface ValorVariante {
-  id: number
-  nombre: string         // ✅ CORREGIDO: nombre (no valor)
-  tipoVarianteId: number
-  // ❌ REMOVIDO: articuloId (no existe en tu modelo)
-  tipoVariante?: TipoVariante
-}
-
-// ✅ NUEVO: Interface para TipoVariante
-export interface TipoVariante {
-  id: number
-  nombre: string
-}
-
-export interface PrecioArticulo {
-  id: number
-  valor: number
-  tipoPrecioId: number
-  articuloId: number
-  tipoPrecio?: {
+  categoria?: {                  // ← NUEVA: Relación con categoría
     id: number
     nombre: string
+    icono?: string
   }
+  marca?: {                      // ← NUEVA: Relación con marca
+    id: number
+    nombre: string
+    logo?: string
+  }
+  articuloValores?: ArticuloVariante[]
+  fotos?: Foto[]
+  precios?: PrecioArticulo[]
+  variantes?: Variante[]
 }
 
 export interface CrearArticuloDto {
   nombre: string
   descripcion?: string
   precio: number
-  variantes?: { tipoVarianteId: number; valor: string }[]
-  precios?: { tipoPrecioId: number; valor: number }[]
+  categoriaId?: number | null    // ← NUEVO: Campo opcional para categoría
+  marcaId?: number | null        // ← NUEVO: Campo opcional para marca
 }
 
 export interface ActualizarArticuloDto {
   nombre?: string
   descripcion?: string
   precio?: number
-  fotoPrincipal?: string
-  variantes?: { tipoVarianteId: number; valor: string }[]
-  precios?: { tipoPrecioId: number; valor: number }[]
+  categoriaId?: number | null    // ← NUEVO: Campo opcional para categoría
+  marcaId?: number | null        // ← NUEVO: Campo opcional para marca
+}
+
+// Interfaces auxiliares
+export interface ArticuloVariante {
+  id: number
+  articuloId: number
+  valorId: number
+  valor?: {
+    id: number
+    nombre: string
+    tipoVarianteId: number
+    tipoVariante?: {
+      id: number
+      nombre: string
+    }
+  }
+}
+
+export interface Foto {
+  id: number
+  url: string
+  publicId: string
+  orden?: number
+  articuloId: number
+}
+
+export interface PrecioArticulo {
+  id: number
+  articuloId: number
+  valor: number
+  tipoPrecioId: number
+  tipoPrecio?: {
+    id: number
+    nombre: string
+  }
+}
+
+export interface Variante {
+  id: number
+  nombre: string
+  sku: string
+  articuloId: number
+  createdAt: string
+  updatedAt: string
 }

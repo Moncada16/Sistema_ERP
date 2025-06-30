@@ -1,154 +1,112 @@
 // ================================
-// 1. BACKEND - CONTROLLER CORREGIDO (articulo.controller.ts)
+// ARTÍCULO ROUTES - CON ENDPOINTS SKU INTEGRADOS
+// Ubicación: src/modules/articulo/routes/articulo.routes.ts
 // ================================
-import { Request, Response } from 'express'
-import * as service from '../service/articulo.service'
 
-interface ArticuloRequest {
-  nombre: string;
-  descripcion?: string;
-  precio: number;
-  variantes?: { tipoVarianteId: number; valor: string }[];
-  precios?: { tipoPrecioId: number; valor: number }[];
-}
-
-export const crearArticulo = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const empresaId = req.user?.empresaId
-    const { nombre, descripcion, precio, variantes, precios }: ArticuloRequest = req.body
-
-    if (typeof empresaId !== 'number') {
-      res.status(403).json({ error: 'Empresa no autorizada' })
-      return
-    }
-
-    if (!nombre || !precio || precio <= 0) {
-      res.status(400).json({ error: 'Nombre y precio son requeridos. El precio debe ser mayor a 0.' })
-      return
-    }
-
-    const articulo = await service.crearArticulo(
-      empresaId, 
-      nombre, 
-      descripcion || '', 
-      precio,
-      variantes,
-      precios
-    )
-    
-    // ✅ RESPUESTA CONSISTENTE - Solo devolver la data
-    res.status(201).json(articulo)
-  } catch (error) {
-    console.error('Error al crear artículo:', error)
-    res.status(500).json({ error: 'Error interno del servidor al crear artículo' })
-  }
-}
-
-export const listarArticulos = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const empresaId = req.user?.empresaId
-
-    if (typeof empresaId !== 'number') {
-      res.status(403).json({ error: 'Empresa no autorizada' })
-      return
-    }
-
-    const articulos = await service.listarArticulos(empresaId)
-    
-    // ✅ IMPORTANTE: Devolver directamente el array para que coincida con el frontend
-    res.status(200).json(articulos)
-  } catch (error) {
-    console.error('Error al listar artículos:', error)
-    res.status(500).json({ error: 'Error interno del servidor al listar artículos' })
-  }
-}
-
-export const obtenerArticuloPorId = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
-
-    if (isNaN(id)) {
-      res.status(400).json({ error: 'ID inválido' })
-      return
-    }
-
-    const articulo = await service.obtenerArticuloPorId(id)
-    
-    if (!articulo) {
-      res.status(404).json({ error: 'Artículo no encontrado' })
-      return
-    }
-
-    res.status(200).json(articulo)
-  } catch (error) {
-    console.error('Error al obtener artículo:', error)
-    res.status(500).json({ error: 'Error interno del servidor al obtener artículo' })
-  }
-}
-
-export const actualizarArticulo = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
-
-    if (isNaN(id)) {
-      res.status(400).json({ error: 'ID inválido' })
-      return
-    }
-
-    const articuloExistente = await service.obtenerArticuloPorId(id)
-    if (!articuloExistente) {
-      res.status(404).json({ error: 'Artículo no encontrado' })
-      return
-    }
-
-    const articulo = await service.actualizarArticulo(id, req.body)
-    res.status(200).json(articulo)
-  } catch (error) {
-    console.error('Error al actualizar artículo:', error)
-    res.status(500).json({ error: 'Error interno del servidor al actualizar artículo' })
-  }
-}
-
-export const eliminarArticulo = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const id = parseInt(req.params.id)
-
-    if (isNaN(id)) {
-      res.status(400).json({ error: 'ID inválido' })
-      return
-    }
-
-    const articuloExistente = await service.obtenerArticuloPorId(id)
-    if (!articuloExistente) {
-      res.status(404).json({ error: 'Artículo no encontrado' })
-      return
-    }
-
-    await service.eliminarArticulo(id)
-    res.status(200).json({ message: 'Artículo eliminado exitosamente' })
-  } catch (error) {
-    console.error('Error al eliminar artículo:', error)
-    res.status(500).json({ error: 'Error interno del servidor al eliminar artículo' })
-  }
-}
-
-// ================================
-// 2. BACKEND - ROUTES CORREGIDAS (articulo.routes.ts)
-// ================================
 import { Router } from 'express'
 import * as controller from '../controller/articulo.controller'
 import { verificarToken } from '../../../middleware/verificarToken'
 
 const router = Router()
 
-// Aplicar middleware de autenticación a todas las rutas
+// 🔐 Aplicar middleware de autenticación a todas las rutas
 router.use(verificarToken)
 
-// 📦 Artículo CRUD
+// ============================================
+// 📦 RUTAS BÁSICAS DE ARTÍCULOS (EXISTENTES)
+// ============================================
+
 router.post('/', controller.crearArticulo)          // POST /api/articulos
 router.get('/', controller.listarArticulos)         // GET /api/articulos  
 router.get('/:id', controller.obtenerArticuloPorId) // GET /api/articulos/:id
 router.put('/:id', controller.actualizarArticulo)   // PUT /api/articulos/:id
 router.delete('/:id', controller.eliminarArticulo)  // DELETE /api/articulos/:id
 
+// ============================================
+// 🚀 NUEVAS RUTAS SKU INTEGRADAS
+// ============================================
+
+// ✅ RESOLVER ERROR 404 - Obtener variantes/SKUs de un artículo
+router.get('/:id/variantes', controller.obtenerVariantesArticulo)
+// GET /api/articulos/123/variantes
+// Resuelve el error 404 que tenías con /api/variantes
+
+// ✅ Obtener artículo completo con todos sus SKUs
+router.get('/:id/completo', controller.obtenerArticuloCompleto)
+// GET /api/articulos/123/completo
+
+// ✅ Generar todos los SKUs posibles para un artículo
+router.post('/:id/generar-skus', controller.generarSkusMasivos)
+// POST /api/articulos/123/generar-skus
+
+// ✅ Obtener estadísticas de SKUs de un artículo
+router.get('/:id/estadisticas', controller.obtenerEstadisticasArticulo)
+// GET /api/articulos/123/estadisticas
+
+// ✅ Búsqueda avanzada de artículos con información de SKUs
+router.get('/buscar/con-skus', controller.buscarArticulosConSkus)
+// GET /api/articulos/buscar/con-skus?query=polo&conStock=true
+
 export default router
+
+// ============================================
+// 📚 DOCUMENTACIÓN DE NUEVOS ENDPOINTS
+// ============================================
+
+/*
+🎯 ENDPOINTS NUEVOS AGREGADOS:
+
+1. 🔧 RESOLVER ERROR 404:
+   GET /api/articulos/:id/variantes
+   - Reemplaza el /api/variantes que estaba fallando
+   - Devuelve SKUs en formato compatible con tu frontend actual
+   
+   Respuesta:
+   [
+     {
+       "id": 456,
+       "sku": "CAM-POLO-ROJ-XL-001",
+       "codigoBarras": "1234567890123",
+       "nombre": "Rojo - XL",
+       "combinacion": [
+         {"tipo": "Color", "valor": "Rojo"},
+         {"tipo": "Talla", "valor": "XL"}
+       ],
+       "precio": 25000,
+       "stock": 50,
+       "activo": true
+     }
+   ]
+
+2. 📊 ARTÍCULO COMPLETO:
+   GET /api/articulos/:id/completo
+   - Artículo + todos sus SKUs + estadísticas
+   
+3. 🔄 GENERAR SKUs MASIVOS:
+   POST /api/articulos/:id/generar-skus
+   - Genera automáticamente todos los SKUs posibles
+   - Basado en las variantes configuradas
+
+4. 📈 ESTADÍSTICAS:
+   GET /api/articulos/:id/estadisticas
+   - Información detallada de SKUs, inventario y variantes
+
+5. 🔍 BÚSQUEDA AVANZADA:
+   GET /api/articulos/buscar/con-skus?query=polo&conStock=true
+   - Buscar artículos con información de SKUs incluida
+
+🚀 COMPATIBILIDAD:
+- Todos los endpoints existentes siguen funcionando igual
+- El nuevo endpoint /variantes resuelve el error 404
+- Compatible con tu frontend actual
+- Preparado para e-commerce futuro
+
+📝 PARA TU FRONTEND:
+Cambiar:
+  GET /api/variantes 
+Por:
+  GET /api/articulos/:id/variantes
+
+Ejemplo:
+  GET /api/articulos/123/variantes
+*/

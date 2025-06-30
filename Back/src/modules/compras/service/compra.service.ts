@@ -22,11 +22,17 @@ export const registrarCompra = async (data: CrearCompraDTO) => {
   // 🧾 Registrar compra con detalles
   const compra = await prisma.compra.create({
     data: {
+      numero: data.numero, // Asegúrate de que 'numero' esté presente en CrearCompraDTO y sea proporcionado
       proveedorId: data.proveedorId,
       tipoPago: data.tipoPago,
       bodegaId: data.bodegaId,
       detalles: {
-        create: data.detalles
+        create: data.detalles.map(d => ({
+          cantidad: d.cantidad,
+          valorCompra: d.valorCompra,
+          valorVenta: d.valorVenta,
+          sku: { connect: { id: d.varianteId } }
+        }))
       }
     },
     include: { detalles: true }
@@ -34,18 +40,19 @@ export const registrarCompra = async (data: CrearCompraDTO) => {
 
   // 📦 Actualizar inventario
   for (const d of data.detalles) {
-    await prisma.inventario.upsert({
+    await prisma.skuInventario.upsert({
       where: {
-        varianteId_bodegaId: {
-          varianteId: d.varianteId,
-          bodegaId: data.bodegaId
+        skuId_bodegaId_ubicacion: { // Use the actual composite unique key name from your Prisma schema
+          skuId: d.varianteId,
+          bodegaId: data.bodegaId,
+          ubicacion: d.ubicacion ?? '' // Asegúrate de que 'ubicacion' sea opcional en CrearCompraDTO
         }
       },
       update: {
         cantidad: { increment: d.cantidad }
       },
       create: {
-        varianteId: d.varianteId,
+        skuId: d.varianteId,
         bodegaId: data.bodegaId,
         cantidad: d.cantidad
       }
